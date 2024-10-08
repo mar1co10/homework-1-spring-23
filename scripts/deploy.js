@@ -12,9 +12,37 @@ async function main() {
 
   const lockedAmount = hre.ethers.parseEther("0.001");
 
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
+  /*const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
     value: lockedAmount,
   });
+  */
+
+  const Bank = await hre.ethers.getContractFactory("Bank");
+  const bank = await Bank.deploy();
+  await bank.waitForDeployment();
+  console.log("Bank contract deployed to:", bank.address);
+
+  //connects the contract
+  const [signer] = await hre.ethers.getSigners();
+
+  let tx - await bank.connect(signer).createAccount();
+  await tx.wait();
+  console.log("Account created for:", signer.address);
+
+
+  var account = await bank.accounts(signer.address);
+  console.log("Account Owner:", account.owner);
+
+
+  tx = await bank.connect(signer).deposit(50);
+  await tx.wait();
+  console.log("Deposited 50 into account");
+
+  tx = await bank.connect(signer).withdraw(30);
+  await tx.wait();
+  console.log("Withdraw 30 from account");
+
+  
 
   await lock.waitForDeployment();
 
