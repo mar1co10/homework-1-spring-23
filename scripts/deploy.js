@@ -25,7 +25,7 @@ async function main() {
   //connects the contract
   const [signer] = await hre.ethers.getSigners();
 
-  let tx - await bank.connect(signer).createAccount();
+  let tx = await bank.connect(signer).createAccount();
   await tx.wait();
   console.log("Account created for:", signer.address);
 
